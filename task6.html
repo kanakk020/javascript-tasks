@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO LIST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Mono', monospace;
+            background: #0a0a0f;
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            background: linear-gradient(135deg, #f5f0e8 0%, #c9a96e 50%, #f5f0e8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #13131f 0%, #0e0e1a 100%);
+            border: 1px solid rgba(201, 169, 110, 0.2);
+            box-shadow:
+                0 0 0 1px rgba(201, 169, 110, 0.05),
+                0 40px 80px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        #task {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201, 169, 110, 0.25);
+            color: #f5f0e8;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.875rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            outline: none;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.5rem;
+            width: 100%;
+        }
+
+        #task::placeholder {
+            color: rgba(245, 240, 232, 0.2);
+        }
+
+        #task:focus {
+            border-color: rgba(201, 169, 110, 0.7);
+            background: rgba(201, 169, 110, 0.05);
+            box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1), 0 0 20px rgba(201, 169, 110, 0.08);
+        }
+
+        #btn {
+            background: linear-gradient(135deg, #c9a96e 0%, #a07840 100%);
+            color: #0a0a0f;
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        #btn:hover {
+            background: linear-gradient(135deg, #dbbf82 0%, #b88d50 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(201, 169, 110, 0.35);
+        }
+
+        #btn:active {
+            transform: translateY(0px);
+        }
+
+        #list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+
+        #list li {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-left: 3px solid rgba(201, 169, 110, 0.6);
+            color: #e8e2d8;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.875rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            letter-spacing: 0.02em;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #list li:hover {
+            background: rgba(201, 169, 110, 0.07);
+            border-left-color: #c9a96e;
+            transform: translateX(3px);
+        }
+
+        #list li[style*="line-through"] {
+            color: rgba(245, 240, 232, 0.25) !important;
+            border-left-color: rgba(201, 169, 110, 0.15) !important;
+            background: rgba(0,0,0,0.2) !important;
+        }
+
+        #reset {
+            background: transparent;
+            border: 1px solid rgba(255,80,80,0.25);
+            color: rgba(255,120,120,0.6);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        #reset:hover {
+            background: rgba(255,80,80,0.08);
+            border-color: rgba(255,80,80,0.5);
+            color: rgba(255,120,120,0.9);
+            box-shadow: 0 0 16px rgba(255,80,80,0.12);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent);
+        }
+
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) translateX(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        /* Ambient glow top-left */
+        .glow-orb {
+            position: fixed;
+            top: -120px;
+            left: -120px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-2 {
+            position: fixed;
+            bottom: -100px;
+            right: -100px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(100, 80, 200, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-4 relative">
+
+<div class="glow-orb"></div>
+<div class="glow-orb-2"></div>
+
+<div class="card relative z-10 w-full max-w-lg rounded-2xl p-8 flex flex-col gap-6">
+
+    <!-- Header -->
+    <div class="flex flex-col gap-1">
+        <h2>TO-DO List</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Input Row -->
+    <div class="flex gap-3">
+        <input type="text" id="task" placeholder="What needs to be done?">
+        <button id="btn" type="button">Add Task</button>
+    </div>
+
+    <!-- List -->
+    <ul id="list"></ul>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-between pt-2">
+        <button id="reset">Clear all</button>
+    </div>
+
+</div>
+
+<script>
+const list = document.querySelector("#list")
+const btn = document.querySelector("#btn")
+const taskInput = document.querySelector("#task")
+const resetBtn = document.querySelector("#reset")
+
+
+btn.addEventListener("click", function () {
+
+    const task = taskInput.value
+
+    if(task === "") return
+
+    list.innerHTML += "<li>" + task + "</li>"
+
+    taskInput.value = ""
+})
+
+
+document.addEventListener("click", function (e) {
+
+    if (e.target.tagName === "LI") {
+        e.target.style.textDecoration = "line-through"
+    }
+
+})
+resetBtn.addEventListener("click", () => {
+    list.innerHTML = ""
+})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form</title>
+</head>
+
+<body>
+
+<h2>Form Example</h2>
+
+<form id="form">
+<input type="email" id="email" placeholder="Enter email">
+<input type="password" id="password" placeholder="Enter password">
+<button type="submit">Submit</button>
+</form>
+
+<script>
+
+const form = document.querySelector("#form")
+const emailInput = document.querySelector("#email")
+const passwordInput = document.querySelector("#password")
+
+form.addEventListener("submit", function(e){
+
+    e.preventDefault()
+
+    const email = emailInput.value
+    const password = passwordInput.value
+
+    const regex = /^(?=.*[A-Z]).{8,}$/
+
+    if(!regex.test(password)){
+        console.log("Password must be at least 8 characters and contain one capital letter")
+        return
+    }
+
+    console.log("Email:", email)
+    console.log("Password:", password)
+
+})
+
+</script>
+
+</body>
+</html>
